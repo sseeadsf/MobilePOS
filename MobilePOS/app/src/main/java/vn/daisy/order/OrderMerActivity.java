@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.daisy.mobilepos.MyService;
 import vn.daisy.mobilepos.R;
 import vn.daisy.sdk.Common;
 import vn.daisy.sdk.XMLParser;
@@ -336,7 +337,11 @@ public class OrderMerActivity extends AppCompatActivity {
         super.onStop();
         unregisterReceiver();
     }
-
+    @Override
+    protected void onDestroy(){
+        startService(new Intent(getBaseContext(), MyService.class));
+        super.onDestroy();
+    }
     @Override
     protected void onResume() {
         super.onResume();
