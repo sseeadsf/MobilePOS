@@ -14,9 +14,9 @@ public class OrderForm {
     private List<Merchandise> merchandises; //list merchandise request
     private Employee employee; // employee execute
     private String machineCode;
-    private String status;
+    private char status;
 
-    public OrderForm(String transCode, String transDate, String transTime, String transNum, List<Merchandise> merchandises, Employee employee, String machineCode, String status) {
+    public OrderForm(String transCode, String transDate, String transTime, String transNum, List<Merchandise> merchandises, Employee employee, String machineCode, char status) {
         this.transCode = transCode;
         this.transDate = transDate;
         this.transTime = transTime;
@@ -30,11 +30,11 @@ public class OrderForm {
         super();
     }
 
-    public String getStatus() {
+    public char getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(char status) {
         this.status = status;
     }
 

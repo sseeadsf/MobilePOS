@@ -15,10 +15,6 @@ public class Merchandise {
     public final int TAG_DISCOUNT_PER = 1;
     public final int TAG_DISCOUNT_VALUE = 2;
 
-
-    public String toString(){
-        return merchandiseBarcode+"\t"+merchandiseShortName+"\t"+merchandiseFullName+"\t"+merchandiseID+"\t"+quantity+"\t"+price+"\t"+piceUnit+"\t"+discount;
-    }
     public Merchandise(String merchandiseBarcode, String merchandiseShortName, String merchandiseFullName, String merchandiseID, int quantity, float price, String piceUnit, long discount) {
         this.merchandiseBarcode = merchandiseBarcode;
         this.merchandiseShortName = merchandiseShortName;

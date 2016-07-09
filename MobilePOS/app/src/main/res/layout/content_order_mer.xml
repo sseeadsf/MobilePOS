@@ -250,8 +250,8 @@
                 android:textSize="@dimen/bt_font_size"
                 android:background="@drawable/commonbutton"
                 android:layout_below="@+id/sv_listview"
-                android:text="@string/bt_submit"
-                android:onClick="btnSubmitClick"/>
+                android:text="@string/btn_next"
+                android:onClick="btnNextClick"/>
 
         </RelativeLayout>
 

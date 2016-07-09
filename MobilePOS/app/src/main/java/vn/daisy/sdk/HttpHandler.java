@@ -19,21 +19,21 @@ public class HttpHandler {
     private final String TAG_HTTP_STATUS = "HTTP_STATUS";
 
     public HttpHandler(){
-
+        super();
     }
-
 
     public void httpDownloadFile(String sourceFileUrl, String fileTarget){
         try {
-            URL url = new URL(sourceFileUrl);
-            URLConnection urlConnection = url.openConnection();
-            urlConnection.connect();
             int lengOfFile;
             int count = 0;
+            URL url = new URL(sourceFileUrl);
+            Log.i(TAG_HTTP_STATUS, "PATH " + sourceFileUrl.toString());
+            URLConnection urlConn = url.openConnection();
+            urlConn.connect();
             Object obj = urlConnection.getContent();
             lengOfFile = urlConnection.getContentLength();
             Log.i(TAG_HTTP_STATUS, "Leng file: " + sourceFileUrl +" " + String.valueOf(lengOfFile));
-            InputStream inputStream = new BufferedInputStream(url.openStream(), 9999);
+            InputStream inputStream = new BufferedInputStream(url.openStream(), 9000);
             OutputStream outputStream  = new FileOutputStream(fileTarget);
             byte buffer[] = new byte[1024];
             while((count = inputStream.read(buffer)) != -1){
@@ -49,6 +49,7 @@ public class HttpHandler {
         }catch (IOException e){
             Log.e(TAG_HTTP_STATUS, "Can not open URL: "+ sourceFileUrl +" " + "Exception: "+ e.getMessage());
         }
+
     }
 
 

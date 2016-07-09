@@ -16,5 +16,6 @@
     <string name="bt_submit">Submit</string>
     <string name="title_activity_order_form">OrderFormActivity</string>
     <string name="tv_trans_type">Transaction Type</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="inventory">Inventory</string>
+    <string name="btn_next">Next</string>
 </resources>

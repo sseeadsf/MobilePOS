@@ -36,7 +36,7 @@ public class UploadFileService extends Service{
                 orderForm = orderForms.poll();
                 merchandises = orderForm.getMerchandises();
                 fileName = String.valueOf(orderForm.getTransCode()+orderForm.getEmployee().getId() +".xml");
- 
+
             }
         }catch (NullPointerException ex){
             Log.e(TAG_NULL_UPLOAD, "Queue is empty");

@@ -1,15 +1,11 @@
 package vn.daisy.order;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,23 +14,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
-import vn.daisy.mobilepos.MyService;
 import vn.daisy.mobilepos.R;
 import vn.daisy.sdk.Common;
+import vn.daisy.sdk.XMLCreator;
 import vn.daisy.sdk.XMLParser;
 
 public class OrderMerActivity extends AppCompatActivity {
@@ -48,7 +41,7 @@ public class OrderMerActivity extends AppCompatActivity {
     private CheckBox cb_discount;
     private TextView tv_id_mer;
     private ListView lv_list_item;
-    private int count=0;
+
 
 
     private List<Merchandise> merchandises;
@@ -60,6 +53,8 @@ public class OrderMerActivity extends AppCompatActivity {
     private String barcode;
     private float total = 0;
     private ArrayList<Merchandise> list_mercs = null;
+    private Queue<OrderForm> orderForms_quQueue;
+    private String transNum="1N1234";
 
 
     private String ACTION_CONTENT_NOTIFY = "android.intent.action.CONTENT_NOTIFY";
@@ -71,19 +66,12 @@ public class OrderMerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         merchandises = new ArrayList<>();
         xmlParser = new XMLParser();
-        merchandises = xmlParser.getInforMechandises("/data/SKUXML.xml");
+        merchandises = xmlParser.getInforMechandises("/sdcard/SKUXML.xml");
         comm = new Common(this);
-
+        orderForms_quQueue = new LinkedList<>();
+        /**************************config container*************************/
         tv_barcode = (TextView) findViewById(R.id.tv_id_barcode);
         et_quantity = (EditText)findViewById(R.id.et_id_quantity);
         et_discount = (EditText)findViewById(R.id.et_discount);
@@ -145,60 +133,58 @@ public class OrderMerActivity extends AppCompatActivity {
         et_discount.setText(null);
     }
 
+    public void actions1()
+    {
 
-    public void btnSubmitClick(View view){
-        final Dialog dialog = new Dialog(this);
-        String arr[]={
-                "Hàng điện tử",
-                "Hàng hóa chất",
-                "Hàng gia dụng"};
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>
-                (
-                        this,
-                        android.R.layout.simple_spinner_item,
-                        arr
-                );
-        adapter.setDropDownViewResource
-                (android.R.layout.simple_list_item_single_choice);
+        if(new Common().isCheckNetworkAvailable()){
 
-        Spinner spinner = (Spinner)dialog.findViewById(R.id.sp_trans_id);
-        spinner.setAdapter(adapter);
-        final OrderForm orderForm = new OrderForm();
-        orderForm.setTransDate(comm.getNowDate());
-        orderForm.setTransTime(comm.getNowTime());
-        orderForm.setMachineCode(comm.getMACAddress());
 
-        if(connectInternet(getApplicationContext())){
-            //send query to database
-        } else{
-            try {
-                FileWriter write = new FileWriter(new File("Query"+count+".xml"));
-                write.write(merchandises.get(count).toString());
-                write.flush();
-                write.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }else{
+            dialog = new AlertDialog.Builder(this);
+            dialog.setTitle("Warning");
+            dialog.setMessage("Internet is not available");
+            dialog.setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            dialog.setNegativeButton("Next", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    OrderForm orderForm = new OrderForm();
+                    orderForm.setTransCode(new Common().createBillCode());
+                    orderForm.setTransNum(transNum);
+                    orderForm.setMachineCode(new Common().getMACAddress());
+                    orderForm.setTransDate(new Common().getNowDate());
+                    orderForm.setTransTime(new Common().getNowTime());
+                    orderForm.setStatus('N');
+                    orderForm.setMerchandises(list_mercs);
+                    orderForms_quQueue.add(orderForm);
+
+                }
+            });
+
+
         }
+    }
 
-
-
-
-
-        dialog.setTitle("Confirm Order Form");
-        dialog.setContentView(R.layout.order_form);
-        Button button = (Button)dialog.findViewById(R.id.dl_dt_submit);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-
-
+    public void btnNextClick(View view){
+        Employee employee = new Employee();
+        employee.setId("1N5822");
+        XMLCreator xmlCreator = new XMLCreator();
+        OrderForm orderForm = new OrderForm();
+        orderForm.setTransCode(new Common().createBillCode());
+        orderForm.setTransNum(transNum);
+        orderForm.setMachineCode("AAAAA");
+        orderForm.setTransDate(new Common().getNowDate());
+        orderForm.setTransTime(new Common().getNowTime());
+        orderForm.setStatus('N');
+        orderForm.setMerchandises(list_mercs);
+        orderForm.setEmployee(employee);
+        xmlCreator.createXMLFile("/sdcard/khanh.xml", orderForm, 2);
+        Toast.makeText(OrderMerActivity.this, "Save complete", Toast.LENGTH_SHORT);
     }
 
 
@@ -258,7 +244,6 @@ public class OrderMerActivity extends AppCompatActivity {
                             }else {
                                 about = price * quantity - ((float)discount /(float) 100) * quantity * price;
                             }
-
                             total +=about;
 
                             merchandise.setMerchandiseBarcode(barcode);
@@ -290,7 +275,6 @@ public class OrderMerActivity extends AppCompatActivity {
                         });
                         dialog.show();
                     }
-
                 } catch (NumberFormatException ne) {
                     Log.e(TAG_ERROR_ENTER, ne.getMessage().toString());
                     dialog = new AlertDialog.Builder(this);
@@ -337,11 +321,7 @@ public class OrderMerActivity extends AppCompatActivity {
         super.onStop();
         unregisterReceiver();
     }
-    @Override
-    protected void onDestroy(){
-        startService(new Intent(getBaseContext(), MyService.class));
-        super.onDestroy();
-    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -393,10 +373,6 @@ public class OrderMerActivity extends AppCompatActivity {
         if (dataReceive != null)
             unregisterReceiver(dataReceive);
     }
-    private boolean connectInternet(Context context){
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork!=null && activeNetwork.isConnectedOrConnecting();
-    }
+
 
 }

@@ -9,6 +9,9 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import java.io.File;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -17,6 +20,8 @@ import java.util.Calendar;
  */
 public class Common {
     private Context context;
+    private String TAG_BILL = "BL";
+
 
     public Common(){
         super();
@@ -95,5 +100,18 @@ public class Common {
         WifiInfo info = manager.getConnectionInfo();
         address = info.getMacAddress();
         return address;
+    }
+
+    public  String createBillCode(){
+        SecureRandom secureRandom = new SecureRandom();
+        return TAG_BILL + new BigInteger(130, secureRandom).toString(32).toUpperCase();
+    }
+    public static boolean checkFileExist(String url)
+    {
+            File file = new File(url);
+            if (file.exists())
+                return true;
+            else
+                return false;
     }
 }

@@ -36,8 +36,8 @@ public class XMLCreator {
     private final String TAG_HEADER_TRANS_TIME ="transtime";
     private final String TAG_HEADER_TRANS_ID ="transcode";
     private final String TAG_TOTAL = "totalall";
-    private final String TAG_HEADER_EMPLOYEE_ID = "employee";
-    private final String TAG_HEADER_MACHINE_ID = "machine";
+    private final String TAG_HEADER_EMPLOYEE_ID = "user_id";
+    private final String TAG_HEADER_MACHINE_ID = "machine_id";
     // tag children
     private final String TAG_NODE = "mercinfo" ;
     private final String TAG_CHILD_MER_ID="sku_id";
@@ -80,7 +80,7 @@ public class XMLCreator {
         root.appendChild(trans_code);
 
         Element user_id = document.createElement(TAG_HEADER_EMPLOYEE_ID);
-        user_id.appendChild(document.createTextNode(orderForm.getEmployee().getId()));
+         user_id.appendChild(document.createTextNode(orderForm.getEmployee().getId()));
         root.appendChild(user_id);
 
         Element machine_id= document.createElement(TAG_HEADER_MACHINE_ID);
@@ -88,7 +88,7 @@ public class XMLCreator {
         root.appendChild(machine_id);
 
         Element status = document.createElement(TAG_STARUS);
-        status.appendChild(document.createTextNode(orderForm.getStatus()));
+        status.appendChild(document.createTextNode(String.valueOf(orderForm.getStatus())));
         root.appendChild(status);
 
 

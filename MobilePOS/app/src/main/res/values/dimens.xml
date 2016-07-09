@@ -22,9 +22,5 @@
 
     <dimen name="dl_width">500px</dimen>
     <dimen name="dl_height">300px</dimen>
-    <dimen name="textSize">25dp</dimen>
-    <dimen name="height">300dp</dimen>
-    <dimen name="textSizeSmall">10dp</dimen>
-    <dimen name="margin">25dp</dimen>
 
 </resources>
