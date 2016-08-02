@@ -185,6 +185,8 @@ public class OrderMerActivity extends AppCompatActivity {
         orderForm.setEmployee(employee);
         xmlCreator.createXMLFile("/sdcard/khanh.xml", orderForm, 2);
         Toast.makeText(OrderMerActivity.this, "Save complete", Toast.LENGTH_SHORT);
+        Intent intent = new Intent(this, OrderMerActivity.class);
+        startActivity(intent);
     }
 
 
